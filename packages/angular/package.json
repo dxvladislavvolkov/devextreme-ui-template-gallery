@@ -44,8 +44,6 @@
     "@angular/compiler-cli": "^15.0.0",
     "@types/jasmine": "^4.3.0",
     "@types/node": "^18.11.9",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
     "devextreme-cli": "latest",
     "devextreme-themebuilder": "23.2-next",
     "eslint": "8.22.0",
