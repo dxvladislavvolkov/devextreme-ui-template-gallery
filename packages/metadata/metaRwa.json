@@ -1,6 +1,6 @@
 [
     {
-        "Name": "CRM",
+        "Name": "CRM Templates",
         "Groups": [
             {
                 "Name": "Contact List",
@@ -35,7 +35,7 @@
         ]
     },
     {
-        "Name": "Planning",
+        "Name": "Planning Templates",
         "Groups": [
             {
                 "Name": "Task List",
@@ -66,17 +66,32 @@
                         ]
                     }
                 ]
+            },
+            {
+                "Name": "Scheduler",
+                "Demos": [
+                    {
+                        "Title": "Scheduler",
+                        "Name": "planning-scheduler",
+                        "DemoType": "Rwa",
+                        "AvailableApproaches": [
+                            "Angular",
+                            "React",
+                            "Vue"
+                        ]
+                    }
+                ]
             }
         ]
     },
     {
-        "Name": "Analytics",
+        "Name": "Analytics Templates",
         "Groups": [
             {
-                "Name": "Dashboard",
+                "Name": "Overview Dashboard",
                 "Demos": [
                     {
-                        "Title": "Dashboard",
+                        "Title": "Overview Dashboard",
                         "Name": "analytics-dashboard",
                         "DemoType": "Rwa",
                         "AvailableApproaches": [
@@ -88,10 +103,10 @@
                 ]
             },
             {
-                "Name": "Sales Report",
+                "Name": "Sales Dashboard",
                 "Demos": [
                     {
-                        "Title": "Sales Report",
+                        "Title": "Sales Dashboard",
                         "Name": "analytics-sales-report",
                         "DemoType": "Rwa",
                         "AvailableApproaches": [
@@ -103,11 +118,81 @@
                 ]
             },
             {
-                "Name": "Geography",
+                "Name": "Geography Dashboard",
                 "Demos": [
                     {
-                        "Title": "Geography",
+                        "Title": "Geography Dashboard",
                         "Name": "analytics-geography",
+                        "DemoType": "Rwa",
+                        "AvailableApproaches": [
+                            "Angular",
+                            "React",
+                            "Vue"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "Name": "Authentication Templates",
+        "Groups": [
+            {
+                "Name": "Sign In Form",
+                "Demos": [
+                    {
+                        "Title": "Sign In Form",
+                        "Name": "sign-in-form",
+                        "DemoType": "Rwa",
+                        "AvailableApproaches": [
+                            "Angular",
+                            "React",
+                            "Vue"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "Sign Up Form",
+                "Demos": [
+                    {
+                        "Title": "Sign Up Form",
+                        "Name": "sign-up-form",
+                        "DemoType": "Rwa",
+                        "AvailableApproaches": [
+                            "Angular",
+                            "React",
+                            "Vue"
+                        ]
+                    }
+                ]
+            },
+            {
+                "Name": "Reset Password Form",
+                "Demos": [
+                    {
+                        "Title": "Reset Password Form",
+                        "Name": "reset-password-form",
+                        "DemoType": "Rwa",
+                        "AvailableApproaches": [
+                            "Angular",
+                            "React",
+                            "Vue"
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "Name": "Common Templates",
+        "Groups": [
+            {
+                "Name": "User Profile",
+                "Demos": [
+                    {
+                        "Title": "User Profile",
+                        "Name": "user-profile",
                         "DemoType": "Rwa",
                         "AvailableApproaches": [
                             "Angular",

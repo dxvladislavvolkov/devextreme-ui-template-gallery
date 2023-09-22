@@ -174,12 +174,13 @@
       :contact-id="panelData?.id"
       :is-panel-opened="isPanelOpened"
       @close="onClose"
+      @pin-changed="onPanelPinChanged"
     />
   </div>
 
   <form-popup
     title="New Contact"
-    v-model:is-visible="isAddContactPopupOpened"
+    v-model:visible="isAddContactPopupOpened"
     @save="onSaveContactNewForm"
   >
     <contact-new-form />
@@ -188,7 +189,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import DxDropDownButton from 'devextreme-vue/drop-down-button';
+import DxDropDownButton, { DxDropDownButtonTypes } from 'devextreme-vue/drop-down-button';
 import { DxButton } from 'devextreme-vue/button';
 import DxDataGrid, {
   DxColumn,
@@ -203,6 +204,7 @@ import DxDataGrid, {
   DxToolbar as DxGridToolbar,
   DxItem as DxGridToolbarItem,
   DxSearchPanel,
+  DxDataGridTypes,
 } from 'devextreme-vue/data-grid';
 import { getContacts } from 'dx-template-gallery-data';
 import { saveAs } from 'file-saver-es';
@@ -210,16 +212,14 @@ import { Workbook } from 'exceljs';
 
 import { jsPDF as JsPdf } from 'jspdf';
 import { contactStatusList, Contact } from '@/types/contact';
-import { ExportingEvent, RowClickEvent } from 'devextreme/ui/data_grid';
 import DataSource from 'devextreme/data/data_source';
-import { SelectionChangedEvent } from 'devextreme/ui/drop_down_button';
 import { exportDataGrid as exportDataGridToPdf } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportDataGridToXLSX } from 'devextreme/excel_exporter';
 import { formatPhone } from '@/utils/formatters';
-import ContactStatus from '@/components/contact-status.vue';
-import FormPopup from '@/components/form-popup.vue';
-import ContactNewForm from '@/components/contact-new-form.vue';
-import ContactPanel from '@/components/contact-panel.vue';
+import ContactStatus from '@/components/utils/contact-status.vue';
+import FormPopup from '@/components/utils/form-popup.vue';
+import ContactNewForm from '@/components/library/contact-new-form.vue';
+import ContactPanel from '@/components/library/contact-panel.vue';
 
 const filterStatusList = ['All', ...contactStatusList];
 type FilterContactStatus = typeof filterStatusList[number];
@@ -236,7 +236,7 @@ const dataSource = new DataSource({
   load: () => getContacts(),
 });
 
-const rowClick = (e: RowClickEvent) => {
+const rowClick = (e: DxDataGridTypes.RowClickEvent) => {
   if (e.data.id) {
     panelData.value = e.data;
     isPanelOpened.value = true;
@@ -248,7 +248,7 @@ const addContact = () => {
   isAddContactPopupOpened.value = true;
 };
 
-const filterByStatus = (e: SelectionChangedEvent) => {
+const filterByStatus = (e: DxDropDownButtonTypes.SelectionChangedEvent) => {
   const { item: status }: { item: FilterContactStatus } = e;
 
   if (status === 'All') {
@@ -258,7 +258,7 @@ const filterByStatus = (e: SelectionChangedEvent) => {
   }
 };
 
-const onExporting = (e: ExportingEvent) => {
+const onExporting = (e: DxDataGridTypes.ExportingEvent) => {
   if (e.format === 'pdf') {
     const doc = new JsPdf();
     exportDataGridToPdf({
@@ -284,6 +284,10 @@ const onExporting = (e: ExportingEvent) => {
   }
 };
 
+const onPanelPinChanged = () => {
+  dataGrid.value?.instance.updateDimensions();
+};
+
 const refresh = () => {
   dataSource.reload();
 };
@@ -307,13 +311,16 @@ const onClose = () => {
   focusedRowKey.value = null;
 };
 
-const refreshOptions = { text: 'Refresh', icon: 'refresh', onClick: refresh };
+const refreshOptions = {
+  text: 'Refresh',
+  icon: 'refresh',
+  onClick: refresh,
+  stylingMode: 'text',
+};
 </script>
 
 <style scoped lang="scss">
 @use "@/variables" as *;
-
-@include separator();
 
 .view-wrapper {
   position: absolute;
@@ -321,35 +328,36 @@ const refreshOptions = { text: 'Refresh', icon: 'refresh', onClick: refresh };
   bottom: 0;
   left: 0;
   right: 0;
+  flex-direction: row;
 
   .grid  {
     .name-template {
 
       .position {
         font-size: 12px;
-        color: $texteditor-label-color;
+        color: var(--texteditor-label-color);
       }
     }
 
     :deep(.dx-row-focused) {
       .name-template.name-template {
-        color: $base-focus-color;
+        color: var(--base-focus-color);
 
         .position {
-          color: $base-focus-color;
+          color: var(--base-focus-color);
         }
       }
       .status {
-        @include status($base-focus-color);
+        @include status(var(--base-focus-color));
       }
     }
 
     :deep(.dx-datagrid-header-panel) {
-      padding: 0 $content-padding;
+      padding: 0 var(--content-padding);
 
       .dx-toolbar {
         margin-bottom: 0;
-        padding: $toolbar-margin-bottom 0;
+        padding: var(--toolbar-margin-bottom) 0;
       }
     }
 

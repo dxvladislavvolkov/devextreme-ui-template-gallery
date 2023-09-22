@@ -1,11 +1,10 @@
 <dx-scroll-view class="view-wrapper-scroll">
   <div class="view-wrapper">
-    <dx-toolbar>
+    <dx-toolbar class="toolbar-details">
       <dxi-item location="before">
         <dx-button icon="arrowleft"></dx-button>
       </dxi-item>
       <dxi-item location="before" [text]="taskName"></dxi-item>
-
       <dxi-item location="after" locateInMenu="auto">
         <dx-drop-down-button text="Actions" stylingMode="contained">
           <dxi-item text="Duplicate"></dxi-item>
@@ -19,9 +18,10 @@
         widget="dxButton"
         showText="inMenu"
         [options]="{
-        text: 'Attach',
-        icon: 'attach'
-      }"
+          text: 'Attach',
+          icon: 'attach',
+          stylingMode: 'text'
+        }"
       ></dxi-item>
       <dxi-item
         location="after"
@@ -29,17 +29,18 @@
         widget="dxButton"
         showText="inMenu"
         [options]="{
-        text: 'Refresh',
-        icon: 'refresh',
-        onClick: refresh
-      }"
+          text: 'Refresh',
+          icon: 'refresh',
+          onClick: refresh,
+          stylingMode: 'text'
+        }"
       ></dxi-item>
     </dx-toolbar>
 
     <div class="panels">
       <div class="left">
         <dx-validation-group>
-          <task-form [task]="task" [isLoading]="isLoading" [contentByScreen]="{ xs: 2, sm: 2 }"></task-form>
+          <task-form [task]="task" [isLoading]="isLoading"></task-form>
         </dx-validation-group>
       </div>
 
@@ -54,7 +55,10 @@
               ></card-activities>
             </dxi-item>
             <dxi-item title="Notes">
-              <card-notes [items]="task?.notes" [user]="task?.owner"></card-notes>
+              <card-notes
+                [items]="task?.notes"
+                [user]="task?.owner"
+              ></card-notes>
             </dxi-item>
             <dxi-item title="Messages" [badge]="task?.messages.length">
               <card-messages

@@ -6,17 +6,17 @@ import { DxButtonModule } from 'devextreme-angular/ui/button';
 import { DxDataGridModule } from 'devextreme-angular/ui/data-grid';
 import { DxTabsModule } from 'devextreme-angular/ui/tabs';
 import { DxToolbarModule } from 'devextreme-angular/ui/toolbar';
-import { ItemClickEvent as TabsItemClickEvent } from 'devextreme/ui/tabs';
-import { InputEvent as TextBoxInputEvent } from 'devextreme/ui/text_box';
+import { DxTabsTypes } from 'devextreme-angular/ui/tabs';
+import { DxTextBoxTypes } from 'devextreme-angular/ui/text-box';
 import { taskPanelItems } from 'src/app/types/resource';
 import { Task, newTask } from 'src/app/types/task';
 import { DataService, ScreenService } from 'src/app/services';
 import { forkJoin, map, Observable } from 'rxjs';
-import { TaskFormModule } from '../../components/task-form/task-form.component';
-import { FormPopupModule, FormPopupComponent} from 'src/app/components';
-import { TaskListGridComponent, TaskListModule } from '../../components/task-list-grid/task-list-grid.component';
-import { TaskListKanbanModule, TaskListKanbanComponent } from '../../components/task-list-kanban/task-list-kanban.component';
-import { TaskListGanttComponent, TaskListGanttModule } from '../../components/task-list-gantt/task-list-gantt.component';
+import { TaskFormModule } from 'src/app/components/library/task-form/task-form.component';
+import { FormPopupModule } from 'src/app/components/utils/form-popup/form-popup.component';
+import { TaskListGridComponent, TaskListModule } from 'src/app/components/library/task-list-grid/task-list-grid.component';
+import { TaskListKanbanModule, TaskListKanbanComponent } from 'src/app/components/library/task-list-kanban/task-list-kanban.component';
+import { TaskListGanttComponent, TaskListGanttModule } from 'src/app/components/library/task-list-gantt/task-list-gantt.component';
 import { DxLoadPanelModule } from 'devextreme-angular/ui/load-panel';
 
 @Component({
@@ -31,13 +31,13 @@ export class PlanningTaskListComponent implements OnInit {
 
   @ViewChild('planningKanban', { static: false }) kanban: TaskListKanbanComponent;
 
-  @ViewChild('taskPopup', { static: true }) taskPopup: FormPopupComponent;
-
   newTask = newTask;
 
   taskPanelItems = taskPanelItems;
 
   displayTaskComponent = this.taskPanelItems[0].text;
+
+  isAddTaskPopupOpened = false;
 
   displayGrid = this.displayTaskComponent === this.taskPanelItems[0].text;
 
@@ -45,7 +45,7 @@ export class PlanningTaskListComponent implements OnInit {
 
   taskCollections$: Observable<{ allTasks: Task[]; filteredTasks: Task[] }>;
 
-  constructor(private service: DataService, private screen: ScreenService) {
+  constructor(private service: DataService, protected screen: ScreenService) {
   }
 
   ngOnInit(): void {
@@ -58,7 +58,7 @@ export class PlanningTaskListComponent implements OnInit {
     );
   }
 
-  tabValueChange(e: TabsItemClickEvent) {
+  tabValueChange(e: DxTabsTypes.ItemClickEvent) {
     const { itemData } = e;
 
     this.displayTaskComponent = itemData.text;
@@ -67,11 +67,7 @@ export class PlanningTaskListComponent implements OnInit {
   };
 
   addTask = () => {
-    this.taskPopup.popupVisible = true;
-  };
-
-  getTabWidth = () => {
-    return this.screen.isXSmallScreen() ? 220 : 'auto';
+    this.isAddTaskPopupOpened = true;
   };
 
   refresh = () => {
@@ -86,7 +82,7 @@ export class PlanningTaskListComponent implements OnInit {
 
   chooseColumnDataGrid = () => this.dataGrid.showColumnChooser();
 
-  searchDataGrid = (e: TextBoxInputEvent) => this.dataGrid.search(e.component.option('text'));
+  searchDataGrid = (e: DxTextBoxTypes.InputEvent) => this.dataGrid.search(e.component.option('text'));
 
   exportToPdf = () => {
     if (this.displayGrid) {

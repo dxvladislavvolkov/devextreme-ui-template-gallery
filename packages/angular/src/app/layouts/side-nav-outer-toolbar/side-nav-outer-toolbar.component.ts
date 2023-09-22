@@ -6,14 +6,14 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
-import { ItemClickEvent } from 'devextreme/ui/tree_view';
+import { DxTreeViewTypes } from 'devextreme-angular/ui/tree-view';
 import { DxDrawerModule } from 'devextreme-angular/ui/drawer';
 import { DxScrollViewComponent } from 'devextreme-angular/ui/scroll-view';
 import { CommonModule } from '@angular/common';
 
 import { Router, RouterModule, NavigationEnd, Event } from '@angular/router';
 import { ScreenService, AppInfoService } from '../../services';
-import { SideNavigationMenuModule, HeaderModule, FooterModule } from '../../components';
+import { SideNavigationMenuModule, AppHeaderModule, AppFooterModule } from '../../components';
 
 import { Subscription } from 'rxjs';
 
@@ -85,7 +85,7 @@ export class SideNavOuterToolbarComponent implements OnInit, OnDestroy {
     return !this.menuOpened;
   }
 
-  navigationChanged(event: ItemClickEvent) {
+  navigationChanged(event: DxTreeViewTypes.ItemClickEvent) {
     const path = (event.itemData as any).path;
     const pointerEvent = event.event;
 
@@ -119,9 +119,9 @@ export class SideNavOuterToolbarComponent implements OnInit, OnDestroy {
     RouterModule,
     SideNavigationMenuModule,
     DxDrawerModule,
-    HeaderModule,
+    AppHeaderModule,
     CommonModule,
-    FooterModule
+    AppFooterModule
   ],
   exports: [SideNavOuterToolbarComponent],
   declarations: [SideNavOuterToolbarComponent],

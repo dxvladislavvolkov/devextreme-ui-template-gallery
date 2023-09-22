@@ -8,6 +8,7 @@
         <dx-toolbar-item
           location="before"
           :text="contactName"
+          class="contact-name-toolbar-item"
         />
         <dx-toolbar-item
           location="after"
@@ -93,8 +94,8 @@ import {
 import { getContact } from 'dx-template-gallery-data';
 import type { Contact } from '@/types/contact';
 
-import ContactForm from '@/components/contact-form.vue';
-import ContactCards from '@/components/contact-cards.vue';
+import ContactForm from '@/components/library/contact-form.vue';
+import ContactCards from '@/components/utils/contact-cards.vue';
 
 const contactId = 12;
 const contactName = ref('');
@@ -121,30 +122,29 @@ onMounted(() => {
 const copyOptions = {
   text: 'Copy',
   icon: 'copy',
+  stylingMode: 'text',
 };
 
 const refreshOptions = {
   text: 'Refresh',
   icon: 'refresh',
   onClick: refresh,
+  stylingMode: 'text',
 };
 </script>
 
 <style scoped lang="scss">
 @use "@/variables" as *;
-@include separator();
-
-$left-panel-width: 400px;
-$right-panel-width: 360px;
+@use "sass:math";
 
 @media only screen and (max-width: 875px) {
   :deep(.contact-name-toolbar-item) {
-    min-width: calc(#{$left-panel-width} + #{$right-panel-width} - 145px);
+    min-width: calc(var(--left-panel-width) + var(--right-panel-width) - 145px);
   }
 }
 
 .dx-toolbar {
-  margin-bottom: calc(#{$toolbar-margin-bottom} / 2);
+  margin-bottom: calc(var(--toolbar-margin-bottom) / 2);
 
   :deep(.dx-toolbar-label > div) {
     @include header();
@@ -152,7 +152,10 @@ $right-panel-width: 360px;
 }
 
 .view-wrapper {
-  padding: $content-padding $content-padding 0 $content-padding;
+  --left-panel-width: 400px;
+  --right-panel-width: 360px;
+
+  padding: var(--content-padding) var(--content-padding) 0 var(--content-padding);
 
   .panels {
     display: flex;
@@ -161,12 +164,12 @@ $right-panel-width: 360px;
     gap: 20px;
 
     .left {
-      flex: 1 $left-panel-width;
+      flex: 1 var(--left-panel-width);
       margin-top: 8px;
     }
 
     .right {
-      flex: 1 calc(100% - #{$left-panel-width} - 20px);
+      flex: 1 calc(100% - var(--left-panel-width) - 20px);
       margin-top: 8px;
       min-width: 340px;
     }

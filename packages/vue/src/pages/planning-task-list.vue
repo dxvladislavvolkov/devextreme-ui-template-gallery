@@ -81,10 +81,12 @@
         :options="taskSearchOptions"
       />
     </dx-toolbar>
-    <load-component
-      :is-loading="isLoading"
-      :show-content="!!gridData.length"
-    >
+    <dx-load-panel
+      :visible="isLoading"
+      :show-pane="false"
+      width="auto"
+    />
+    <template v-if="!!gridData.length">
       <div
         v-if="taskPanelItems[0].text === displayTaskComponent"
         class="grid"
@@ -112,15 +114,15 @@
           :tasks="ganttData"
         />
       </div>
-    </load-component>
+    </template>
   </div>
   <form-popup
     title="New Task"
-    v-model:is-visible="isNewTaskPopupOpened"
+    v-model:visible="isNewTaskPopupOpened"
     @save="onSaveNewTask"
   >
     <task-form
-      :content-by-screen="{ xs: 1, sm: 1 }"
+      :content-by-screen="{ xs: screenInfo.isSmallMobileMedia ? 1 : 2, sm: 2 }"
       :is-create-mode="true"
       :data="popupTask"
     />
@@ -130,9 +132,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import DxButton from 'devextreme-vue/button';
-import DxTabs from 'devextreme-vue/tabs';
-import { ItemClickEvent as TabsItemClickEvent } from 'devextreme/ui/tabs';
-import { InputEvent as TextBoxInputEvent } from 'devextreme/ui/text_box';
+import DxTabs, { DxTabsTypes } from 'devextreme-vue/tabs';
+import { DxTextBoxTypes } from 'devextreme-vue/text-box';
 import {
   DxToolbar,
   DxItem as DxToolbarItem,
@@ -142,12 +143,12 @@ import {
 import { getTasks, getFilteredTasks } from 'dx-template-gallery-data';
 import { taskPanelItems, TaskPanelItemsIds } from '@/types/resource';
 import type { Task } from '@/types/task';
-import FormPopup from '@/components/form-popup.vue';
-import LoadComponent from '@/components/load-component.vue';
-import TaskForm from '@/components/task-form.vue';
-import TaskListGrid from '@/components/task-list-grid.vue';
-import TaskListKanban from '@/components/task-list-kanban.vue';
-import TaskListGantt from '@/components/task-list-gantt.vue';
+import FormPopup from '@/components/utils/form-popup.vue';
+import DxLoadPanel from 'devextreme-vue/load-panel';
+import TaskForm from '@/components/library/task-form.vue';
+import TaskListGrid from '@/components/library/task-list-grid.vue';
+import TaskListKanban from '@/components/library/task-list-kanban.vue';
+import TaskListGantt from '@/components/library/task-list-gantt.vue';
 import { newTask } from '@/types/task';
 
 import { screenInfo } from '@/utils/media-query';
@@ -168,7 +169,7 @@ const addTask = () => {
   isNewTaskPopupOpened.value = true;
 };
 const chooseColumnDataGrid = () => tasksGridCmp.value.showColumnChooser();
-const searchDataGrid = (e: TextBoxInputEvent) => tasksGridCmp.value.search(e.component.option('text'));
+const searchDataGrid = (e: DxTextBoxTypes.InputEvent) => tasksGridCmp.value.search(e.component.option('text'));
 const exportToPdf = () => {
   ({
     grid: tasksGridCmp,
@@ -199,7 +200,7 @@ const loadTasksAsync = async () => {
   isLoading.value = false;
 };
 
-const tabValueChange = (e: TabsItemClickEvent) => {
+const tabValueChange = (e: DxTabsTypes.ItemClickEvent) => {
   const { itemData } = e;
   displayTaskComponent.value = itemData.text;
   const tabId = taskPanelItems.find((item) => displayTaskComponent.value === item.text)?.id;
@@ -226,24 +227,28 @@ const refreshOptions = {
   text: 'Refresh',
   icon: 'refresh',
   onClick: reload,
+  stylingMode: 'text',
 };
 
 const columnChooserOptions = {
   text: 'Column Chooser',
   icon: 'columnchooser',
   onClick: chooseColumnDataGrid,
+  stylingMode: 'text',
 };
 
 const exportToPdfOptions = {
   text: 'Export to PDF',
   icon: 'exportpdf',
   onClick: exportToPdf,
+  stylingMode: 'text',
 };
 
 const exportToXlsxOptions = {
   text: 'Export to Exel',
   icon: 'exportxlsx',
   onClick: exportToXlsx,
+  stylingMode: 'text',
 };
 
 const taskSearchOptions = {
@@ -256,8 +261,6 @@ const taskSearchOptions = {
 <style scoped lang="scss">
 @use "@/variables" as *;
 
-@include separator();
-
 .view-wrapper {
   position: absolute;
   top: 0;
@@ -266,7 +269,7 @@ const taskSearchOptions = {
   right: 0;
 
   .dx-toolbar {
-    padding: $content-padding;
+    padding: var(--toolbar-vertical-padding) var(--content-padding);
   }
 
   :deep(.dx-toolbar) {
@@ -279,15 +282,15 @@ const taskSearchOptions = {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
-    max-height: calc(100% - $toolbar-items-container-height - $content-padding * 2);
+    max-height: calc(100% - var(--toolbar-height) - var(--content-padding) * 2);
   }
 
   .gantt {
-    padding: 0 $content-padding $content-padding;
+    padding: 0 var(--content-padding) var(--content-padding);
   }
 
   .kanban {
-    padding: 0 0 $content-padding calc($content-padding / 2);
+    padding: 0 0 var(--content-padding) calc(var(--content-padding) / 2);
   }
 }
 </style>

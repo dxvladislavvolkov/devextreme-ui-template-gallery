@@ -11,9 +11,7 @@ import { exportDataGrid } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportDataGridXSLX } from 'devextreme/excel_exporter';
 import LoadPanel from 'devextreme-react/load-panel';
 
-import dxTextBox from 'devextreme/ui/text_box';
-
-import { PlanningGrid, PlanningKanban, PlanningGantt, FormPopup, TaskFormDetails } from '../../components';
+import { TaskListGrid, TaskListKanban, TaskListGantt, FormPopup, TaskFormDetails } from '../../components';
 
 import { newTask } from '../../shared/constants';
 import { useScreenSize } from '../../utils/media-query';
@@ -25,10 +23,10 @@ import 'jspdf-autotable';
 
 import './planning-task-list.scss';
 import Button from 'devextreme-react/button';
-import TextBox from 'devextreme-react/text-box';
+import TextBox, { TextBoxTypes } from 'devextreme-react/text-box';
 import Tabs from 'devextreme-react/tabs';
 
-const listsData = ['LIST', 'KANBAN BOARD', 'GANTT'];
+const listsData = ['List', 'Kanban Board', 'Gantt'];
 
 export const PlanningTaskList = () => {
   const gridRef = useRef<DataGrid>(null);
@@ -126,7 +124,7 @@ export const PlanningTaskList = () => {
     });
   }, []);
 
-  const search = useCallback((e: { component: dxTextBox }) => {
+  const search = useCallback((e: TextBoxTypes.InputEvent) => {
     gridRef.current?.instance.searchByText(e.component.option('text') ?? '');
   }, []);
 
@@ -239,11 +237,11 @@ export const PlanningTaskList = () => {
         </Item>
       </Toolbar>
       {loading && <LoadPanel container='.content' showPane={false} visible position={{ of: '.content' }} />}
-      {!loading && isDataGrid && <PlanningGrid dataSource={gridData} ref={gridRef} />}
-      {!loading && isKanban && <PlanningKanban dataSource={filteredData} ref={kanbanRef} changePopupVisibility={changePopupVisibility} />}
-      {!loading && view === ganttView && <PlanningGantt dataSource={filteredData} ref={ganttRef} />}
-      <FormPopup title='New Task' visible={popupVisible} changeVisibility={changePopupVisibility}>
-        <TaskFormDetails colCountByScreen={{ xs: 1, sm: 1 }} subjectField data={newTaskData} editing onDataChanged={onDataChanged} />
+      {!loading && isDataGrid && <TaskListGrid dataSource={gridData} ref={gridRef} />}
+      {!loading && isKanban && <TaskListKanban dataSource={filteredData} ref={kanbanRef} changePopupVisibility={changePopupVisibility} />}
+      {!loading && view === ganttView && <TaskListGantt dataSource={filteredData} ref={ganttRef} />}
+      <FormPopup title='New Task' visible={popupVisible} setVisible={changePopupVisibility}>
+        <TaskFormDetails subjectField data={newTaskData} editing onDataChanged={onDataChanged} />
       </FormPopup>
     </div>
   );

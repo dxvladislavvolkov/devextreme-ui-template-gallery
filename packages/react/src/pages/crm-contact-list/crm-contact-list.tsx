@@ -9,16 +9,13 @@ import { getContacts } from 'dx-template-gallery-data';
 import DataGrid, {
   Sorting, Selection, HeaderFilter, Scrolling, SearchPanel,
   ColumnChooser, Export, Column, Toolbar, Item, LoadPanel,
+  DataGridTypes
 } from 'devextreme-react/data-grid';
-
-import { ExportingEvent, RowClickEvent, ColumnCellTemplateData } from 'devextreme/ui/data_grid';
 
 import SelectBox from 'devextreme-react/select-box';
 import TextBox from 'devextreme-react/text-box';
 import Button from 'devextreme-react/button';
-import DropDownButton from 'devextreme-react/drop-down-button';
-
-import { SelectionChangedEvent } from 'devextreme/ui/drop_down_button';
+import DropDownButton, { DropDownButtonTypes } from 'devextreme-react/drop-down-button';
 
 import { exportDataGrid as exportDataGridToPdf } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportDataGridToXLSX } from 'devextreme/excel_exporter';
@@ -35,7 +32,7 @@ type FilterContactStatus = ContactStatusType | 'All';
 
 const filterStatusList = ['All', ...CONTACT_STATUS_LIST];
 
-const cellNameRender = (cell: ColumnCellTemplateData) => (
+const cellNameRender = (cell: DataGridTypes.ColumnCellTemplateData) => (
   <div className='name-template'>
     <div>{cell.data.name}</div>
     <div className='position'>{cell.data.position}</div>
@@ -46,7 +43,7 @@ const editCellStatusRender = () => (
   <SelectBox className='cell-info' dataSource={CONTACT_STATUS_LIST} itemRender={ContactStatus} fieldRender={fieldRender} />
 );
 
-const cellPhoneRender = (cell: ColumnCellTemplateData) => (
+const cellPhoneRender = (cell: DataGridTypes.ColumnCellTemplateData) => (
   String(cell.data.phone).replace(/(\d{3})(\d{3})(\d{4})/, '+1($1)$2-$3')
 );
 
@@ -57,7 +54,7 @@ const fieldRender = (text: string) => (
   </>
 );
 
-const onExporting = (e: ExportingEvent) => {
+const onExporting = (e: DataGridTypes.ExportingEvent) => {
   if (e.format === 'pdf') {
     const doc = new JsPdf();
     exportDataGridToPdf({
@@ -109,18 +106,22 @@ export const CRMContactList = () => {
     gridRef.current?.instance.option('focusedRowIndex', -1);
   }, [isPanelOpened]);
 
+  const changePanelPinned = useCallback(() => {
+    gridRef.current?.instance.updateDimensions();
+  }, []);
+
   const onAddContactClick = useCallback(() => {
     setPopupVisible(true);
   }, []);
 
-  const onRowClick = useCallback(({ data }: RowClickEvent) => {
+  const onRowClick = useCallback(({ data }: DataGridTypes.RowClickEvent) => {
     setContactId(data.id);
     setPanelOpened(true);
   }, []);
 
   const [status, setStatus] = useState(filterStatusList[0]);
 
-  const filterByStatus = useCallback((e: SelectionChangedEvent) => {
+  const filterByStatus = useCallback((e: DropDownButtonTypes.SelectionChangedEvent) => {
     const { item: status }: { item: FilterContactStatus } = e;
     if (status === 'All') {
       gridRef.current?.instance.clearFilter();
@@ -167,9 +168,9 @@ export const CRMContactList = () => {
             </Item>
             <Item location='before' locateInMenu='auto'>
               <DropDownButton
-                dataSource={filterStatusList}
+                items={filterStatusList}
                 stylingMode='text'
-                selectedItemKey={status}
+                text={status}
                 dropDownOptions={dropDownOptions}
                 useSelectMode
                 onSelectionChanged={filterByStatus}
@@ -239,8 +240,8 @@ export const CRMContactList = () => {
           />
           <Column dataField='email' caption='Email' hidingPriority={1} />
         </DataGrid>
-        <ContactPanel contactId={contactId} isOpened={isPanelOpened} changePanelOpened={changePanelOpened} />
-        <FormPopup title='New Contact' visible={popupVisible} changeVisibility={changePopupVisibility}>
+        <ContactPanel contactId={contactId} isOpened={isPanelOpened} changePanelOpened={changePanelOpened} changePanelPinned={changePanelPinned} />
+        <FormPopup title='New Contact' visible={popupVisible} setVisible={changePopupVisibility}>
           <ContactNewForm />
         </FormPopup>
       </div>

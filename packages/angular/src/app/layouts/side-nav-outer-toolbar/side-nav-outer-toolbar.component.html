@@ -3,8 +3,7 @@
   [menuToggleEnabled]="true"
   (menuToggle)="menuOpened = !menuOpened"
   [title]="appInfo.title"
->
-</app-header>
+></app-header>
 
 <dx-drawer
   class="layout-body"
@@ -16,7 +15,7 @@
   [shading]="shaderEnabled"
   [(opened)]="menuOpened"
 >
-  <app-side-navigation-menu
+  <side-navigation-menu
     [compactMode]="!menuOpened"
     [selectedItem]="selectedRoute"
     class="dx-swatch-additional"
@@ -24,10 +23,13 @@
     (selectedItemChanged)="navigationChanged($event)"
     (openMenu)="navigationClick()"
   >
-    <app-footer>Copyright © {{ appInfo.currentYear }} <br> Developer Express Inc.</app-footer>
-  </app-side-navigation-menu>
+    <app-footer
+      >Copyright © {{ appInfo.currentYear }} <br />
+      Developer Express Inc.</app-footer
+    >
+  </side-navigation-menu>
 
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
 </dx-drawer>

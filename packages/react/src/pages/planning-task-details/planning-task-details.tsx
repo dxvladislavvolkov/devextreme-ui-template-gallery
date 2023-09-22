@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { Item as ToolbarItem } from 'devextreme-react/toolbar';
+import { Toolbar, Item as ToolbarItem } from 'devextreme-react/toolbar';
 import DropDownButton, { Item as DropDownItem } from 'devextreme-react/drop-down-button';
 import TabPanel, { Item as TabPanelItem } from 'devextreme-react/tab-panel';
 import ValidationGroup from 'devextreme-react/validation-group';
 import Button from 'devextreme-react/button';
 import ScrollView from 'devextreme-react/scroll-view';
 
-import { TaskForm, CardActivities, CardNotes, CardMessages, ToolbarDetails } from '../../components';
+import { TaskForm, CardActivities, CardNotes, CardMessages } from '../../components';
 
 import { Task } from '../../types/task';
 
@@ -19,14 +19,14 @@ const TASK_ID = 1;
 
 export const PlanningTaskDetails = () => {
   const [task, setTask] = useState<Task>();
-  const [messagesCount, setMessagesCount] = useState(0);
+  const [messagesCount, setMessagesCount] = useState('0');
   const [isLoading, setIsLoading] = useState(false);
 
   const loadData = useCallback(() => {
     getTask(TASK_ID)
       .then((data) => {
         setTask(data);
-        setMessagesCount(data.messages.length);
+        setMessagesCount(data.messages.length.toString());
         setIsLoading(false);
       })
       .catch((error) => console.log(error));
@@ -48,7 +48,11 @@ export const PlanningTaskDetails = () => {
   return (
     <ScrollView className='view-wrapper-scroll'>
       <div className='view-wrapper view-wrapper-details'>
-        <ToolbarDetails name={task?.text}>
+        <Toolbar className='toolbar-details'>
+          <ToolbarItem location='before'>
+            <Button icon='arrowleft' />
+          </ToolbarItem>
+          <ToolbarItem location='before' text={ task?.text ?? 'Loading...' } />
           <ToolbarItem location='after' locateInMenu='auto'>
             <DropDownButton text='Actions' stylingMode='contained'>
               <DropDownItem text='Duplicate' />
@@ -81,7 +85,7 @@ export const PlanningTaskDetails = () => {
               onClick={refresh}
             />
           </ToolbarItem>
-        </ToolbarDetails>
+        </Toolbar>
         <div className='panels'>
           <div className='left'>
             <ValidationGroup>

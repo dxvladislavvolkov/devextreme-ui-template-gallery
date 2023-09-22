@@ -1,41 +1,34 @@
-@use "../node_modules/devextreme/scss/widgets/material/colors" as * with ($color: "blue", $mode: "light");
-@use "../node_modules/devextreme/scss/widgets/material/sizes" as * with ($size: "compact");
-@use "../node_modules/devextreme/scss/widgets/material/button/mixins" as *;
-@use "../node_modules/devextreme/scss/widgets/material/textEditor/colors" as *;
-@use "../node_modules/devextreme/scss/widgets/material/fieldset/sizes" as *;
-@use "../node_modules/devextreme/scss/widgets/material/list/sizes" as *;
+:root {
+  .dx-theme-generic {
+    --change-password-popup-height: 190px;
+  }
 
-@forward "../node_modules/devextreme/scss/widgets/material/colors";
-@forward "../node_modules/devextreme/scss/widgets/material/textEditor/colors";
-
-@use "sass:math";
-@use "sass:color";
-
-$content-padding: 16px;
-$side-panel-min-width: 48px;
-$side-panel-background: darken($base-bg, 5);
-$background-color: $base-bg;
-$accent-color: $base-accent;
-$background-gray-color: color.change($base-text-color, $alpha: 0.04);
-$filled-texteditor-input-horizontal-padding: $material-field-value-horizontal-padding;
-$toolbar-margin-bottom: $content-padding;
-$texteditor-edit-color: $texteditor-color;
-$toolbar-items-container-height: 38px;
-$list-padding-left: $material-list-item-horizontal-padding;
-$footer-height: 70px;
-$footer-left-padding: math.div(($side-panel-min-width - $material-base-icon-size), 2);
+  .dx-theme-material {
+    --change-password-popup-height: 260px;
+  }
+}
 
 @mixin separator() {
+  .h-separator {
+    height: 1px;
+    width: auto;
+    background: var(--border-color);
+  }
+
   .separator {
     height: 24px;
     width: 1px;
-    background: $base-border-color;
+    background: var(--border-color);
 
     .dx-toolbar-menu-section & {
       height: 1px;
       width: auto;
     }
   }
+}
+
+@mixin shadow() {
+  box-shadow: 0 1px 4px 0 #00000026;
 }
 
 @mixin header {
@@ -63,7 +56,7 @@ $footer-left-padding: math.div(($side-panel-min-width - $material-base-icon-size
 
   .title {
     font-size: 12px;
-    color: $texteditor-label-color;
+    color: var(--texteditor-label-color);
 
     &:not(:first-child) {
       padding-top: 10px;
@@ -72,10 +65,10 @@ $footer-left-padding: math.div(($side-panel-min-width - $material-base-icon-size
 
   .value {
     font-size: 16px;
-    color: $base-accent;
+    color: var(--accent-color);
 
     &.black {
-      color: $base-text-color;
+      color: var(--base-text-color);
     }
 
     &.small {
@@ -94,7 +87,7 @@ $footer-left-padding: math.div(($side-panel-min-width - $material-base-icon-size
   flex-direction: row;
   justify-content: space-between;
   font-size: 12px;
-  color: $texteditor-label-color;
+  color: var(--texteditor-label-color);
 }
 
 @mixin message-text {
@@ -105,8 +98,9 @@ $footer-left-padding: math.div(($side-panel-min-width - $material-base-icon-size
 @mixin status-contact($status-color) {
   color: $status-color;
 
-  &.dx-texteditor {
-    .status-editor-input {
+  &.dx-texteditor,
+  &.dx-texteditor.dx-editor-filled {
+    input[statuseditorinput][readonly] {
       color: $status-color;
       padding-left: 0;
     }
@@ -117,4 +111,46 @@ $footer-left-padding: math.div(($side-panel-min-width - $material-base-icon-size
       background-color: $status-color;
     }
   }
+}
+
+@mixin calendar-items-text {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+@mixin description-text($opacity) {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  opacity: $opacity;
+}
+
+@mixin h1-header-text {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
+}
+
+@mixin h2-header-text {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+@mixin subtext($opacity: 1) {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  opacity: $opacity;
 }

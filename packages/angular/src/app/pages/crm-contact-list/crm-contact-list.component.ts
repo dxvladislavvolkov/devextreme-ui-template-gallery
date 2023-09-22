@@ -9,7 +9,7 @@ import {
   DxSelectBoxModule,
   DxTextBoxModule,
 } from 'devextreme-angular';
-import { RowClickEvent, ColumnCustomizeTextArg } from 'devextreme/ui/data_grid';
+import { DxDataGridTypes } from 'devextreme-angular/ui/data-grid';
 import { exportDataGrid as exportDataGridToPdf } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportDataGridToXLSX } from 'devextreme/excel_exporter';
 import {
@@ -17,19 +17,17 @@ import {
   ContactStatusModule,
 } from 'src/app/components';
 import { Contact, contactStatusList, ContactStatus, } from 'src/app/types/contact';
-import { SelectionChangedEvent } from 'devextreme/ui/drop_down_button';
-import DataSource from "devextreme/data/data_source";
+import { DxDropDownButtonTypes } from 'devextreme-angular/ui/drop-down-button';
+import DataSource from 'devextreme/data/data_source';
 import { CommonModule } from '@angular/common';
 import { DataService } from 'src/app/services';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver-es';
 import { jsPDF } from 'jspdf';
-import { ContactUserPanelModule } from '../../components/contact-user-panel/contact-user-panel.component';
-import { ContactNewUserFormModule } from '../../components/contact-new-user-form/contact-new-user-form.component';
-import {
-  FormPopupModule,
-  FormPopupComponent,
-} from 'src/app/components';
+import { formatPhone } from 'src/app/pipes/phone.pipe';
+import { FormPopupModule } from 'src/app/components';
+import { ContactPanelModule } from 'src/app/components/library/contact-panel/contact-panel.component';
+import { ContactNewFormModule } from 'src/app/components/library/contact-new-form/contact-new-form.component';
 
 type FilterContactStatus = ContactStatus | 'All';
 
@@ -41,13 +39,13 @@ type FilterContactStatus = ContactStatus | 'All';
 export class CrmContactListComponent {
   @ViewChild(DxDataGridComponent, { static: true }) dataGrid: DxDataGridComponent;
 
-  @ViewChild('userPopup', { static: true }) userPopup: FormPopupComponent;
-
   statusList = contactStatusList;
 
   filterStatusList = ['All', ...contactStatusList];
 
   isPanelOpened = false;
+
+  isAddContactPopupOpened = false;
 
   userId: number;
 
@@ -61,18 +59,17 @@ export class CrmContactListComponent {
     }),
   });
 
-  constructor(private service: DataService) {
-  }
+  constructor(private service: DataService) {}
 
   addContact() {
-    this.userPopup.popupVisible = true;
+    this.isAddContactPopupOpened = true;
   };
 
   refresh = () => {
     this.dataGrid.instance.refresh();
   };
 
-  rowClick(e: RowClickEvent) {
+  rowClick(e: DxDataGridTypes.RowClickEvent) {
     const { data } = e;
 
     this.userId = data.id;
@@ -85,7 +82,11 @@ export class CrmContactListComponent {
     }
   };
 
-  filterByStatus = (e: SelectionChangedEvent) => {
+  onPinnedChange = () => {
+    this.dataGrid.instance.updateDimensions();
+  };
+
+  filterByStatus = (e: DxDropDownButtonTypes.SelectionChangedEvent) => {
     const { item: status }: { item: FilterContactStatus } = e;
 
     if (status === 'All') {
@@ -95,17 +96,7 @@ export class CrmContactListComponent {
     }
   };
 
-  formatPhone = (number: string | number): string => String(number).replace(/(\d{3})(\d{3})(\d{4})/, '+1($1)$2-$3');
-
-  customizePhoneCell = (cellInfo: ColumnCustomizeTextArg) => {
-    const { value } = cellInfo;
-
-    if (!value) {
-      return undefined;
-    }
-
-    return this.formatPhone(value.toString());
-  };
+  customizePhoneCell = ({ value }) => value ? formatPhone(value) : undefined;
 
   onExporting(e) {
     if (e.format === 'pdf') {
@@ -142,8 +133,8 @@ export class CrmContactListComponent {
     DxSelectBoxModule,
     DxTextBoxModule,
 
-    ContactUserPanelModule,
-    ContactNewUserFormModule,
+    ContactPanelModule,
+    ContactNewFormModule,
     FormPopupModule,
     CardActivitiesModule,
     ContactStatusModule,
