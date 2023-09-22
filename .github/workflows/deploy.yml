@@ -71,15 +71,15 @@ jobs:
       run: npm run pack
 
     - name: Install devextreme package for React
-      working-directory: packages/react
+      working-directory: ./packages/react
       run: npm install $(find ../../devextreme-repo/packages/devextreme/artifacts/npm/devextreme/ -maxdepth 1 -name "devextreme-*.tgz")
 
     - name: Install devextreme-dist package for React
-      working-directory: packages/react
+      working-directory: ./packages/react
       run: npm install $(find ../../devextreme-repo/packages/devextreme/artifacts/npm/devextreme-dist/ -maxdepth 1 -name "devextreme-*.tgz")
 
     - name: Install devextreme-react package for React
-      working-directory: packages/react
+      working-directory: ./packages/react
       run: npm install $(find ../../devextreme-repo/packages/devextreme-react/npm/ -maxdepth 1 -name "devextreme-*.tgz")
 
       #Build UI Template Gallery
