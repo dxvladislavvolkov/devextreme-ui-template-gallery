@@ -65,6 +65,9 @@ jobs:
       working-directory: ./devextreme-repo/packages/devextreme-react
       run: npm run pack
 
+    - name: Run npm install
+      run: npm install
+
     - name: Install devextreme package for React
       shell: bash
       working-directory: ./packages/react
@@ -99,9 +102,6 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-
-    - name: Run npm install
-      run: npm install
 
     - name: Set theme
       run: npm run set-theme -- ${{ matrix.theme }}
