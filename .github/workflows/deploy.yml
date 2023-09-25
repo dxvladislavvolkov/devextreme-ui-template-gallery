@@ -71,17 +71,17 @@ jobs:
     - name: Install devextreme package for React
       shell: bash
       working-directory: ./packages/react
-      run: npm install $(find ../../devextreme-repo/packages/devextreme/artifacts/npm/devextreme/ -maxdepth 1 -name "devextreme-*.tgz")
+      run: npm install ../../devextreme-repo/packages/devextreme/artifacts/npm/devextreme/devextreme-23.2.0.tgz
 
     - name: Install devextreme-dist package for React
       shell: bash
       working-directory: ./packages/react
-      run: npm install $(find ../../devextreme-repo/packages/devextreme/artifacts/npm/devextreme-dist/ -maxdepth 1 -name "devextreme-*.tgz")
+      run: npm install ../../devextreme-repo/packages/devextreme/artifacts/npm/devextreme-dist/devextreme-dist-23.2.0.tgz
 
     - name: Install devextreme-react package for React
       shell: bash
       working-directory: ./packages/react
-      run: npm install $(find ../../devextreme-repo/packages/devextreme-react/npm/ -maxdepth 1 -name "devextreme-*.tgz")
+      run: npm install ../../devextreme-repo/packages/devextreme-react/npm/devextreme-react-23.2.0.tgz
 
       #Build UI Template Gallery
     - name: Get sources
