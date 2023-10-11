@@ -20,7 +20,7 @@
           :key="item.dataField"
           :data-field="item.dataField"
           :editor-type="item.editorType"
-          :editor-options="{ stylingMode: 'outlined', ...item.editorOptions } "
+          :editor-options="{ stylingMode: 'filled', ...item.editorOptions } "
           :col-span="item.colSpan"
         >
           <dx-label
